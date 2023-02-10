@@ -1,3 +1,4 @@
+import torch
 import cv2
 
 
@@ -7,11 +8,14 @@ class Visualizer:
         self.KPV = KeyPointVisualizer(kps_num, "coco")
         self.BBV = BBoxVisualizer()
 
-    def visualize(self, image, ids, boxes, kps, kps_scores=()):
+    def visualize(self, image, ids, boxes, kps, kps_scores=(), check_alarm=False):
         if len(ids) > 0:
             self.BBV.visualize(boxes, image)
             self.IDV.plot_bbox_id(self.get_id2bbox(ids, boxes), image)
             self.KPV.visualize(image, kps, kps_scores)
+        if check_alarm:
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            cv2.putText(image, 'WheelChair', (0,70), font, 3, (0, 0, 255), 3, cv2.LINE_AA)
 
     @staticmethod
     def get_id2bbox(ids, boxes):
@@ -53,8 +57,7 @@ class IDVisualizer(object):
     #                     colors["yellow"], 2)
 
 
-import torch
-import cv2
+
 
 RED = (0, 0, 255)
 GREEN = (0, 255, 0)
@@ -151,4 +154,5 @@ class KeyPointVisualizer:
                     start_xy = part_line[start_p]
                     end_xy = part_line[end_p]
                     cv2.line(frame, start_xy, end_xy, self.line_color[i], 8)
+
 
