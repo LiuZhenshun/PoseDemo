@@ -1,10 +1,31 @@
 import os
 import json
 import shutil
+import argparse
 
-JsonPath = "/media/hkuit164/Backup/ThermalProject/2022_11_03_cloudy_dataset/thermal/annotations/val.json"
-FolderPath = "/media/hkuit164/Backup/ThermalProject/2022_11_03_cloudy_dataset/thermal/images"
-OuputPath = "/media/hkuit164/Backup/ThermalProject/2022_11_03_cloudy_dataset/thermal/images/val"
+def parse_args():
+    parser = argparse.ArgumentParser(description='RtspDataCollection')
+    # general
+    parser.add_argument('--JsonPath',
+                        help="coco json",
+                        required=True,
+                        type=str)
+    parser.add_argument('--InputFolder',
+                        help="Inuput's image's folder",
+                        required=True,
+                        type=str)
+    parser.add_argument('--OutputFolder',
+                        help="Selected images in Json",
+                        default = False,
+                        type=str)
+    args = parser.parse_args()
+    return args
+
+args = parse_args()
+
+JsonPath = args.JsonPath
+FolderPath = args.InputFolder
+OuputPath = args.OutputFolder
 move = True
 
 JsonObj = open(JsonPath, "r")

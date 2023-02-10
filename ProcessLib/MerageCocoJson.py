@@ -1,13 +1,28 @@
 import os
 import json
+import argparse
 
-MeragePath = "/media/hkuit164/Backup/ThermalProject/2022_11_03_cloudy_dataset/thermal/TestMerageCocoJson"
+def parse_args():
+    parser = argparse.ArgumentParser(description='RtspDataCollection')
+    # general
+    parser.add_argument('--JsonFolder',
+                        help="json waiting for being meraged",
+                        required=True,
+                        type=str)
+    args = parser.parse_args()
+    return args
+
+args = parse_args()
+
+MeragePath = args.JsonFolder
 OutputJson = os.path.join(MeragePath, "MeagedCoco.json")
 
 MerageFolders = sorted(os.listdir(MeragePath))
 
 DataList = []
 for Obj in MerageFolders:
+    if Obj[0] == ".":
+    	continue
     JsonPath = os.path.join(MeragePath,Obj)
     JsonObj = open(JsonPath, "r")
     Data = json.load(JsonObj)

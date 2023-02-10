@@ -1,6 +1,6 @@
 from src.human_detection import HumanDetector
 import cv2
-import config.config as config
+import config.config_default as config
 from utils.generate_json import JsonGenerator
 from utils.filter_result import ResultFilterer
 from utils.visualize import Visualizer

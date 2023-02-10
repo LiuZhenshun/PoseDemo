@@ -2,11 +2,33 @@ import json
 import cv2
 import sqlite3
 import os
+import argparse
 
-DetectionJson = "/media/hkuit164/Backup/pose_thermal/result.json"
-KeypointJson = "/media/hkuit164/Backup/pose_thermal/result1.json"
+def parse_args():
+    parser = argparse.ArgumentParser(description='RtspDataCollection')
+    # general
+    parser.add_argument('--DetectionJson',
+                        help="Detection's output json",
+                        required=True,
+                        type=str)
+    parser.add_argument('--KeypointJson',
+                        help="KeypointJson's output json",
+                        required=True,
+                        type=str)
+    parser.add_argument('--OutputJson',
+                        help="OutputJson's path",
+                        required=True,
+                        type=str)
+    args = parser.parse_args()
+    return args
 
-OutputJson = "/media/hkuit164/Backup/pose_thermal/ImportJson.json"
+args = parse_args()
+#DetectionJson = "/media/hkuit164/Backup/pose_thermal/result.json"
+#KeypointJson = "/media/hkuit164/Backup/pose_thermal/result1.json"
+#OutputJson = "/media/hkuit164/Backup/pose_thermal/ImportJson.json"
+DetectionJson = args.DetectionJson
+KeypointJson = args.KeypointJson
+OutputJson = args.OutputJson
 
 class JsonCreator:
     def __init__(self, DetectionJson, KeypointJson):
@@ -32,9 +54,11 @@ class JsonCreator:
                 imageName = os.path.basename(DetectionItem["image_path"])
                 image["file_name"] = imageName
                 image["id"] = i
-                imageObj = cv2.imread(DetectionItem["image_path"])
-                image["width"] = imageObj.shape[1]
-                image["height"] = imageObj.shape[0]
+                #imageObj = cv2.imread(DetectionItem["image_path"])
+                #image["width"] = imageObj.shape[1]
+                #image["height"] = imageObj.shape[0]
+                image["width"] = DetectionItem["image_info"]["width"][0]
+                image["height"] = DetectionItem["image_info"]["height"][0]
                 images.append(image)
                 i = i + 1
             if i== 0:
@@ -42,9 +66,8 @@ class JsonCreator:
                 imageName = os.path.basename(DetectionItem["image_path"])
                 image["file_name"] = imageName
                 image["id"] = i
-                imageObj = cv2.imread(DetectionItem["image_path"])
-                image["width"] = imageObj.shape[1]
-                image["height"] = imageObj.shape[0]
+                image["width"] = DetectionItem["image_info"]["width"][0]
+                image["height"] = DetectionItem["image_info"]["height"][0]
                 images.append(image)
                 i = i + 1
         JsonData["images"] = images
@@ -71,6 +94,11 @@ class JsonCreator:
                     keypoints.extend([Keypoint[0]+DetectionItem["bbox"][0], Keypoint[1]+DetectionItem["bbox"][1], 2])
                 annotation["keypoints"] = keypoints
                 annotation["image_id"] = i
+                annotation["id"] = index
+                annotation["area"] = DetectionItem["bbox"][2] * DetectionItem["bbox"][3]
+                annotation["category_id"] = 1
+                annotation["iscrowd"] = 0
+                annotation["num_keypoints"] = 17
                 annotations.append(annotation)
             return annotations
 

@@ -1,12 +1,42 @@
 import os
 import json
 import random
+import argparse
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='RtspDataCollection')
+    # general
+    parser.add_argument('--JsonPath',
+                        help="Detection's output json",
+                        required=True,
+                        type=str)
+    parser.add_argument('--ExtractRange',
+                        help="extract the data from bottom",
+                        nargs='+',
+                        required=True,
+                        type=int)
+    parser.add_argument('--OutputJson',
+                        help="OutputJson's path",
+                        required=True,
+                        type=str)
+    parser.add_argument('--Shuffle',
+                        help="shuffle the output",
+                        default = False,
+                        type=str)
+    args = parser.parse_args()
+    return args
 
-JsonPath = "/media/hkuit164/Backup/ThermalProject/2022_11_03_cloudy_dataset/thermal/annotations/result_project_58.json"
-ExtractNumber = 15
-OutputJson = "/media/hkuit164/Backup/ThermalProject/2022_11_03_cloudy_dataset/thermal/annotations/val.json"
-Shuffle = True
+args = parse_args()
+
+# JsonPath = "/media/hkuit164/Backup/ThermalProject/2022_11_03_cloudy_dataset/thermal/annotations/result_project_58.json"
+# ExtractRange = 15
+# OutputJson = "/media/hkuit164/Backup/ThermalProject/2022_11_03_cloudy_dataset/thermal/annotations/val.json"
+# Shuffle = True
+
+JsonPath = args.JsonPath
+ExtractRange = args.ExtractRange
+OutputJson = args.OutputJson
+Shuffle = args.Shuffle
 
 JsonObj = open(JsonPath, "r")
 Data = json.load(JsonObj)
@@ -16,20 +46,20 @@ JsonData["info"] = {}
 JsonData["licenses"] = []
 
 ImageIdVector = []
-for index in range(len(Data["images"])):
+for index in range(ExtractRange[0], ExtractRange[1]+1):
     ImageIdVector.append(index)
 if Shuffle:
     random.shuffle(ImageIdVector)
 
 Images = []
 Annotations = []
-for index in range(ExtractNumber):
+for index in range(len(ImageIdVector)):
     ImageId = ImageIdVector[index]
     image = Data["images"][ImageId].copy()
     image["id"] = index
     Images.append(image)
 
-    for AnnotationsIndex in range(ImageId,len(Data["annotations"])):
+    for AnnotationsIndex in range(ImageId,len(Data["annotations"])-1):
         if Data["annotations"][AnnotationsIndex]["image_id"] == ImageId:
             annotation = Data["annotations"][AnnotationsIndex].copy()
             annotation["image_id"] = index
