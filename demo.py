@@ -65,7 +65,12 @@ class Demo:
         if self.demo_type == "video":
             idx = 0
             while True:
-                ret, frame = self.cap.read()
+                i = 0
+                while True:
+                    ret, frame = self.cap.read()
+                    i = i + 1
+                    if i==30:
+                        break
                 if ret:
                     time_begin = time.time()
                     self.FP.process(frame, cnt=idx)
