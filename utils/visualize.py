@@ -13,9 +13,13 @@ class Visualizer:
             self.BBV.visualize(boxes, image)
             self.IDV.plot_bbox_id(self.get_id2bbox(ids, boxes), image)
             self.KPV.visualize(image, kps, kps_scores)
+
+        font = cv2.FONT_HERSHEY_SIMPLEX
         if check_alarm:
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            cv2.putText(image, 'WheelChair', (0,70), font, 3, (0, 0, 255), 3, cv2.LINE_AA)
+            cv2.putText(image, 'WheelChair', (0,70), font, 3, (0, 255, 0), 3, cv2.LINE_AA)
+        else:
+            cv2.putText(image, 'Normal', (0,70), font, 3, (0, 255, 0), 3, cv2.LINE_AA)
+
 
     @staticmethod
     def get_id2bbox(ids, boxes):

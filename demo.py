@@ -1,5 +1,5 @@
 from frame_process import FrameProcessor
-import config.config_default as config
+import config.config as config
 import os
 import cv2
 import time
@@ -64,13 +64,15 @@ class Demo:
     def run(self):
         if self.demo_type == "video":
             idx = 0
+            i = 0
             while True:
-                i = 0
-                while True:
-                    ret, frame = self.cap.read()
-                    i = i + 1
-                    if i==30:
-                        break
+                ret, frame = self.cap.read()
+                i = i + 1
+                if i == 30:
+                    break
+            while True:
+                ret, frame = self.cap.read()
+                ret, frame = self.cap.read()
                 if ret:
                     time_begin = time.time()
                     self.FP.process(frame, cnt=idx)

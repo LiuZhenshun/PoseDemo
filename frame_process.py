@@ -1,7 +1,7 @@
 from src.human_detection import HumanDetector
 import cv2
 import numpy as np
-import config.config_default as config
+import config.config as config
 from utils.generate_json import JsonGenerator
 from utils.filter_result import ResultFilterer
 from utils.visualize import Visualizer
@@ -23,7 +23,7 @@ class PoseAnalyzer:
         for index, bbox in enumerate(BBox):
             print("ratio:", (bbox[2]-bbox[0])/(bbox[3]-bbox[1]))
             print("bbox:", bbox)
-            if (bbox[2]-bbox[0])/(bbox[3]-bbox[1]) > 0.7:
+            if (bbox[2]-bbox[0])/(bbox[3]-bbox[1]) > 0.7128:
                 ResultVec[index] = True
             else:
                 ResultVec[index] = False
