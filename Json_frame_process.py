@@ -38,7 +38,7 @@ if __name__ == '__main__':
         if ret:
             FPJ.process(frame, idx)
             cv2.imshow("result", frame)
-            cv2.waitKey(0)
+            cv2.waitKey(1)
         else:
             break
         idx += 1
