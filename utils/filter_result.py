@@ -35,8 +35,8 @@ class ResultFilterer:
         return True
 
     def filter(self, idx, boxes, kps, kps_scores, cnt):
-        # if not self.filter_criterion:
-        #     return idx, boxes, kps, kps_scores
+        if not self.filter_criterion:
+            return idx, boxes, kps, kps_scores
         save_idx = []
         kps = np.array(kps)
         kps_scores = np.array(kps_scores)
