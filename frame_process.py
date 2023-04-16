@@ -5,6 +5,8 @@ import config.config as config
 from utils.generate_json import JsonGenerator
 from utils.filter_result import ResultFilterer
 from utils.visualize import Visualizer
+from abnormal.handler import AbnormalHandler
+
 
 detector_cfg, detector_weight, estimator_weight, estimator_model_cfg, estimator_data_cfg = config.detector_cfg, \
                                 config.detector_weight, config.pose_weight, config.pose_model_cfg, config.pose_data_cfg
@@ -44,22 +46,27 @@ class FrameProcessor:
             self.Json = JsonGenerator(json_path)
         self.filter = ResultFilterer(filter_criterion)
         self.visualizer = Visualizer(self.HP.estimator.kps)
-        self.poseanalyzer = PoseAnalyzer()
+        self.abnormal = AbnormalHandler()
+        # self.poseanalyzer = PoseAnalyzer()
 
     def process(self, frame, cnt=0):
         ids, boxes, kps, kps_scores = self.HP.process(frame, print_time=True)
         # self.HP.visualize(frame)
         ids, boxes, kps, kps_scores = self.filter.filter(ids, boxes, kps, kps_scores, cnt)
 
-        alarmVector = self.poseanalyzer.BBoxAnalyer(ids,boxes)
-        if True in alarmVector:
-            check_alarm = True
-        else:
-            check_alarm = False
+        self.abnormal.process(ids, boxes, kps, kps_scores)
+        self.abnormal.visualize(frame)
+        # alarmVector = self.poseanalyzer.BBoxAnalyer(ids,boxes)
+        # if True in alarmVector:
+        #     check_alarm = True
+        # else:
+        #     check_alarm = False
+        # self.visualizer.visualize(frame, ids, boxes, kps, kps_scores, check_alarm)
+        self.visualizer.visualize(frame, ids, boxes, kps, kps_scores)
 
         if self.write_json:
             self.Json.update(ids, boxes, kps, kps_scores, cnt)
-        self.visualizer.visualize(frame, ids, boxes, kps, kps_scores, check_alarm)
+
 
     def release(self):
         if self.write_json:

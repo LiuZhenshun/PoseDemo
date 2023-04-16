@@ -8,18 +8,11 @@ class Visualizer:
         self.KPV = KeyPointVisualizer(kps_num, "coco")
         self.BBV = BBoxVisualizer()
 
-    def visualize(self, image, ids, boxes, kps, kps_scores=(), check_alarm=False):
+    def visualize(self, image, ids, boxes, kps, kps_scores=()):
         if len(ids) > 0:
             self.BBV.visualize(boxes, image)
             self.IDV.plot_bbox_id(self.get_id2bbox(ids, boxes), image)
             self.KPV.visualize(image, kps, kps_scores)
-
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        if check_alarm:
-            cv2.putText(image, 'WheelChair', (0,70), font, 3, (0, 255, 0), 3, cv2.LINE_AA)
-        else:
-            cv2.putText(image, 'Normal', (0,70), font, 3, (0, 255, 0), 3, cv2.LINE_AA)
-
 
     @staticmethod
     def get_id2bbox(ids, boxes):
