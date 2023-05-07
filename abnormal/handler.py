@@ -5,7 +5,7 @@ import cv2
 class AbnormalHandler:
     def __init__(self):
         self.abnormal = [WheelchairHandler(), FallHandler(), DisabledHandler(), ReverseHandler()]
-        self.abnormal_name = ["wheelchair", "fall", "disabled", "reverse"]
+        self.abnormal_name = ["Wheelchair", "Fall", "Disabled", "Reverse"]
 
     def process(self, ids, boxes, kps, kps_scores):
         inp = {"id": ids, "boxes": boxes, "kps": kps, "kps_scores": kps_scores}
@@ -23,7 +23,7 @@ class AbnormalHandler:
         font = cv2.FONT_HERSHEY_SIMPLEX
         check_alarm = self.status.sum(1) > 0
         alarm_word = self.alarm_wording(check_alarm)
-        alarm_color = (255, 0, 0) if check_alarm.sum() else (0, 255, 0)
+        alarm_color = (3, 255, 255) if check_alarm.sum() else (0, 255, 0)
         cv2.putText(img, alarm_word, (0, 70), font, 3, alarm_color, 3, cv2.LINE_AA)
 
     def alarm_wording(self, check_alarm):
