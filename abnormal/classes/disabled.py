@@ -22,4 +22,7 @@ class DisabledHandler:
                 ResultVec[index] = 0
 
         return ResultVec
+    
+def TestFunction():
+    print("hello, world")
 
